@@ -2,18 +2,7 @@
 #include <sys/time.h>
 #include <osa_que.h>
 #include <errno.h>
-/*
-void maketimeout(struct timespec *tsp,long msec)
-{
-	struct timeval now;
 
-	gettimeofday(&now, NULL);
-	tsp->tv_sec = now.tv_sec;
-	tsp->tv_nsec= now.tv_usec * 1000u;
-	tsp->tv_sec += msec/1000;
-	tsp->tv_nsec+= (msec%1000) * 1000000u;
-}
-*/
 extern void maketimeout(struct timespec *tsp,long msec);
 
 int OSA_queCreate(OSA_QueHndl *hndl, Uint32 maxLen)
@@ -34,7 +23,7 @@ int OSA_queCreate(OSA_QueHndl *hndl, Uint32 maxLen)
  
   status |= pthread_mutexattr_init(&mutex_attr);
   status |= pthread_condattr_init(&cond_attr);  
-  
+  status |= pthread_condattr_setclock(&cond_attr, CLOCK_REALTIME);
   status |= pthread_mutex_init(&hndl->lock, &mutex_attr);
   status |= pthread_cond_init(&hndl->condRd, &cond_attr);    
   status |= pthread_cond_init(&hndl->condWr, &cond_attr);  

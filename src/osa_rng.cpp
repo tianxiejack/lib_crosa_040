@@ -20,7 +20,7 @@ int OSA_rngCreate(OSA_RngHndl *hndl, Uint32 maxLen)
  
   status |= pthread_mutexattr_init(&mutex_attr);
   status |= pthread_condattr_init(&cond_attr);  
-  
+  status |= pthread_condattr_setclock(&cond_attr, CLOCK_REALTIME);
   status |= pthread_mutex_init(&hndl->lock, &mutex_attr);
   status |= pthread_cond_init(&hndl->condRd, &cond_attr);    
   status |= pthread_cond_init(&hndl->condWr, &cond_attr);  

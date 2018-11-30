@@ -11,7 +11,7 @@ int OSA_semCreate(OSA_SemHndl *hndl, Uint32 maxCount, Uint32 initVal)
  
   status |= pthread_mutexattr_init(&mutex_attr);
   status |= pthread_condattr_init(&cond_attr);  
-  
+  status |= pthread_condattr_setclock(&cond_attr, CLOCK_REALTIME);
   status |= pthread_mutex_init(&hndl->lock, &mutex_attr);
   status |= pthread_cond_init(&hndl->cond, &cond_attr);  
 
@@ -35,11 +35,12 @@ int OSA_semCreate(OSA_SemHndl *hndl, Uint32 maxCount, Uint32 initVal)
 
 void maketimeout(struct timespec *tsp,long msec)
 {
-	struct timeval now;
-
-	gettimeofday(&now, NULL);
+	//struct timeval now;
+	//gettimeofday(&now, NULL);
+	struct timespec now;
+	clock_gettime(CLOCK_REALTIME, &now);
 	tsp->tv_sec = now.tv_sec;
-	tsp->tv_nsec= now.tv_usec * 1000u;
+	tsp->tv_nsec= now.tv_nsec;
 	tsp->tv_sec += msec/1000;
 	tsp->tv_nsec+= (msec%1000) * 1000000u;
 }
