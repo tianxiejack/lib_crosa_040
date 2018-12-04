@@ -4,7 +4,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <glew.h>
-#include <glut.h>
+//#include <glut.h>
 #include <cuda.h>
 #include <cuda_gl_interop.h>
 //#include <cuda_runtime.h>
