@@ -41,8 +41,11 @@ void maketimeout(struct timespec *tsp,long msec)
 	clock_gettime(CLOCK_REALTIME, &now);
 	tsp->tv_sec = now.tv_sec;
 	tsp->tv_nsec= now.tv_nsec;
-	tsp->tv_sec += msec/1000;
-	tsp->tv_nsec+= (msec%1000) * 1000000u;
+	unsigned long ns_ms = tsp->tv_nsec/1000000;
+	unsigned long ns_ns = (tsp->tv_nsec%1000000u);
+	ns_ms += msec;
+	tsp->tv_sec += ns_ms/1000;
+	tsp->tv_nsec = (__syscall_slong_t)(ns_ms%1000) * 1000000u + ns_ns;
 }
 
 int OSA_semWait(OSA_SemHndl *hndl, Uint32 timeout)
